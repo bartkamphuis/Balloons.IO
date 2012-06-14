@@ -74,6 +74,19 @@ app.get('/', function(req, res, next) {
 });
 
 /*
+ * admin
+ */ 
+
+app.get('/admin', function(){
+  //check if installed
+  fs.stat(__dirname + '/config.json', function(err, stats){
+    if(err) res.send(500);
+    if(!stats.isFile()) res.render('install');
+    else res.render('admin');
+  });
+});
+
+/*
  * Rooms list
  */
 
