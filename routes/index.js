@@ -51,6 +51,19 @@ if(config.auth.facebook.clientid.length) {
   );
 }
 
+if(config.auth.google.consumerkey.length) {
+  app.get('/auth/google', passport.authenticate('google', {
+    scope: ['https://www.googleapis.com/auth/userinfo.profile','https://www.googleapis.com/auth/userinfo.email'] 
+  }));
+
+  app.get('/auth/google/callback', 
+    passport.authenticate('google', {
+      successRedirect: '/',
+      failureRedirect: '/'
+    })
+  );
+}
+
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');

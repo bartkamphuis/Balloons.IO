@@ -55,7 +55,7 @@ exports.createRoom = function(req, res, client) {
     , room = {
         key: roomKey,
         name: req.body.room_name,
-        admin: req.user.provider + ":" + req.user.username,
+        admin: req.user.provider + ":" + req.user.displayName,
         locked: 0,
         online: 0
       };
@@ -66,7 +66,7 @@ exports.createRoom = function(req, res, client) {
       client.sadd('balloons:public:rooms', roomKey);
       res.redirect('/' + roomKey);
     } else {
-      res.send(500);
+      res.send(500);  
     }
   });
 };
@@ -122,11 +122,11 @@ exports.getUsersInRoom = function(req, res, client, room, fn) {
     online_users.forEach(function(userKey, index) {
       client.get('users:' + userKey + ':status', function(err, status) {
         var msnData = userKey.split(':')
-          , username = msnData.length > 1 ? msnData[1] : msnData[0]
+          , displayName = msnData.length > 1 ? msnData[1] : msnData[0]
           , provider = msnData.length > 1 ? msnData[0] : "twitter";
 
         users.push({
-            username: username,
+            displayName: displayName,
             provider: provider,
             status: status || 'available'
         });
@@ -153,7 +153,7 @@ exports.getPublicRooms = function(client, fn){
  */
 
 exports.getUserStatus = function(user, client, fn){
-  client.get('users:' + user.provider + ":" + user.username + ':status', function(err, status) {
+  client.get('users:' + user.provider + ":" + user.displayName + ':status', function(err, status) {
     if (!err && status) fn(status);
     else fn('available');
   });
@@ -168,7 +168,7 @@ exports.enterRoom = function(req, res, room, users, rooms, status){
     room: room,
     rooms: rooms,
     user: {
-      nickname: req.user.username,
+      nickname: req.user.displayName,
       provider: req.user.provider,
       status: status
     },
