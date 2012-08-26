@@ -373,10 +373,11 @@ $(function() {
   }
 
   function updateTitle() {
-    $('title').html(ich.title_template({
-      count: afkDeliveredMessages,
-      roomName: roomName
-    }, true));
+    // $('title').html(ich.title_template({
+    //   count: afkDeliveredMessages,
+    //   roomName: roomName
+    // }, true));
+    Tinycon.setBubble(afkDeliveredMessages);
   }
 
   function focusInput() {
