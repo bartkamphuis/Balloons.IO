@@ -28,6 +28,7 @@ if(config.auth.twitter.consumerkey.length) {
       callbackURL: config.auth.twitter.callback
     },
     function(token, tokenSecret, profile, done) {
+      console.log(profile);
       return done(null, profile);
     }
   ));
@@ -40,6 +41,7 @@ if(config.auth.facebook.clientid.length) {
       callbackURL: config.auth.facebook.callback
     },
     function(accessToken, refreshToken, profile, done) {
+      console.log(profile);
       return done(null, profile);
     }
   ));
@@ -52,6 +54,7 @@ if(config.auth.google.consumerkey.length) {
       callbackURL: config.auth.google.callback
     },
     function(accessToken, refreshToken, profile, done) {
+      console.log(profile);
       return done(null, profile);
     }
   ));
