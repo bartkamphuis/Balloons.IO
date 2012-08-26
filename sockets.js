@@ -49,7 +49,7 @@ io.configure(function() {
 
 io.sockets.on('connection', function (socket) {
   var hs = socket.handshake
-    , nickname = hs.balloons.user.displayName
+    , nickname = hs.balloons.user.username
     , provider = hs.balloons.user.provider
     , userKey = provider + ":" + nickname
     , room_id = hs.balloons.room
@@ -103,7 +103,7 @@ io.sockets.on('connection', function (socket) {
 
     client.set('users:' + userKey + ':status', status, function(err, statusSet) {
       io.sockets.emit('user-info update', {
-        displayName: nickname,
+        username: nickname,
         provider: provider,
         status: status
       });

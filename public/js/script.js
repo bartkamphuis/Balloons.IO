@@ -11,7 +11,7 @@ $(function() {
 
   // Then check users online!
   $('.people a').each(function(index, element) {
-    USERS[$(element).data('provider') + ":" + $(element).data('displayName')] = 1;
+    USERS[$(element).data('provider') + ":" + $(element).data('username')] = 1;
   });
 
   //View handlers
@@ -83,17 +83,17 @@ $(function() {
   });
 
   socket.on('new user', function(data) {
-    var message = "$displayName has joined the room.";
+    var message = "$username has joined the room.";
 
     //If user is not 'there'
-    if(!$('.people a[data-displayName="' + data.nickname + '"][data-provider="' + data.provider + '"]').length) {
+    if(!$('.people a[data-username="' + data.nickname + '"][data-provider="' + data.provider + '"]').length) {
       //Then add it
       $('.online .people').prepend(ich.people_box(data));
       USERS[data.provider + ":" + data.nickname] = 1;
 
       // Chat notice
       message = message
-            .replace('$displayName', data.nickname);
+            .replace('$username', data.nickname);
 
       // Check update time
       var time = new Date()
@@ -118,10 +118,10 @@ $(function() {
   });
 
   socket.on('user-info update', function(data) {
-    var message = "$displayName is now $status.";
+    var message = "$username is now $status.";
 
     // Update dropdown
-    if(data.displayName === $('#displayName').text() && data.provider === $('#provider').text()) {
+    if(data.username === $('#username').text() && data.provider === $('#provider').text()) {
       $('.dropdown-status .list a').toggleClass('current', false);
       $('.dropdown-status .list a.' + data.status).toggleClass('current', true);
 
@@ -132,26 +132,26 @@ $(function() {
     }
 
     // Update users list
-    $('.people a[data-displayName=' + data.displayName + '][data-provider="' + data.provider + '"]')
+    $('.people a[data-username=' + data.username + '][data-provider="' + data.provider + '"]')
       .removeClass('available away busy')
       .addClass(data.status);
 
     // Chat notice
     message = message
-          .replace('$displayName', data.displayName)
+          .replace('$username', data.username)
           .replace('$status', data.status);
 
     // Check update time
     var time = new Date()
       , noticeBoxData = {
-          user: data.displayName,
+          user: data.username,
           noticeMsg: message,
           time: timeParser(time)
         };
 
       var $lastChatInput = $('.chat .current').children().last();
       
-      if($lastChatInput.hasClass('notice') && $lastChatInput.data('user') === data.displayName) {
+      if($lastChatInput.hasClass('notice') && $lastChatInput.data('user') === data.username) {
         $lastChatInput.replaceWith(ich.chat_notice(noticeBoxData));
       } else {
         $('.chat .current').append(ich.chat_notice(noticeBoxData));
@@ -184,8 +184,8 @@ $(function() {
   });
 
   socket.on('user leave', function(data) {
-    var nickname = $('#displayName').text()
-      , message = "$displayName has left the room.";
+    var nickname = $('#username').text()
+      , message = "$username has left the room.";
     
     for (var userKey in USERS) {
       if(userKey === data.provider + ":" + data.nickname && data.nickname != nickname) {
@@ -197,11 +197,11 @@ $(function() {
           //If not re-connected
           if (!USERS[userKey]) {
             //Remove it and notify
-            $('.people a[data-displayName="' + data.nickname + '"][data-provider="' + data.provider + '"]').remove();
+            $('.people a[data-username="' + data.nickname + '"][data-provider="' + data.provider + '"]').remove();
 
             // Chat notice
             message = message
-                  .replace('$displayName', data.nickname);
+                  .replace('$username', data.nickname);
 
             // Check update time
             var time = new Date(),
